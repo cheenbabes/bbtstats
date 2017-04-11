@@ -72,6 +72,8 @@ app.controller('MainCtrl', function ($scope) {
     $scope.monthPerc = $scope.currMonth.id + 'Perc';
     $scope.monthMOM = $scope.currMonth.id + 'MOM';
 
+
+
     $scope.updateMonth = function () {
         $scope.monthYear = $scope.currMonth.id + '2017';
         $scope.monthPerc = $scope.currMonth.id + 'Perc';
@@ -79,6 +81,32 @@ app.controller('MainCtrl', function ($scope) {
 
         //calc month totals
         //total remittance for month and # of temples who submitted scores and percentage of temples who submitted
+
+        $scope.currMonthRemittance = 0;
+        $scope.currMonthSubmitted = 0;
+        $scope.currMonthNotSubmitted = 0;
+        $scope.currMonthMetGoal = 0;
+        $scope.currMonthLessThan20 = 0;
+        
+        console.log("calling updateMonth with" + $scope.currMonth.id);
+        for (var j = 0; j < $scope.objs.length; j++) {
+            console.log($scope.objs[j]);
+            if ($scope.objs[j][$scope.monthYear] == 0) {
+                $scope.currMonthNotSubmitted++;
+            } else {
+                $scope.currMonthSubmitted++;
+            }
+
+            if ($scope.objs[j][$scope.monthPerc] > 0.95) {
+                $scope.currMonthMetGoal++;
+            } else if ($scope.objs[j][$scope.monthPerc] < 20 && $scope.objs[j][$scope.monthPerc] != 0) {
+                $scope.currMonthLessThan20++;
+            }
+        }
+
+        $scope.currMonthRemittance = $scope.objs.reduce(function (i, score) {
+            return i + Number(score[$scope.monthYear]);
+        }, 0)
     }
 
     $scope.getProgressBarClass = function (perc) {
@@ -97,7 +125,7 @@ app.controller('MainCtrl', function ($scope) {
     $scope.isReversed = true;
 
     $scope.orderUpdate = function () {
-        console.log("selectedOrder:" + $scope.selectedOrder);
+        //console.log("selectedOrder:" + $scope.selectedOrder);
     }
 
     if (isAPIAvailable()) {
@@ -155,7 +183,7 @@ app.controller('MainCtrl', function ($scope) {
             //console.log(data);
             $scope.objs = $.csv.toObjects(csv);
             calculateStats($scope.objs);
-            console.log($scope.objs);
+            //console.log($scope.objs);
             //            var html = '';
             //            for (var row in data) {
             //                html += '<tr>\r\n';
@@ -179,7 +207,7 @@ app.controller('MainCtrl', function ($scope) {
         $scope.behind = 0;
 
         for (var i = 0; i < arr.length; i++) {
-            console.log(arr[i]);
+            //console.log(arr[i]);
             arr[i]["Goal2017"] = Number(arr[i]["Goal2017"]);
             arr[i]["2016"] = Number(arr[i]["2016"])
             arr[i]["Monthly2017"] = Number(arr[i]["Monthly2017"])
@@ -203,10 +231,10 @@ app.controller('MainCtrl', function ($scope) {
             if (arr[i]["PercYear"] >= 1) {
                 $scope.metGoal++;
             }
-            if (arr[i]["PercYear"] <= ((n+1)/12) && arr[i]["PercYear"] >= ((n-1)/12)) {
+            if (arr[i]["PercYear"] <= ((n + 1) / 12) && arr[i]["PercYear"] >= ((n - 1) / 12)) {
                 $scope.onTrack++;
             }
-            if (arr[i]["PercYear"] <= ((n-2)/12)) {
+            if (arr[i]["PercYear"] <= ((n - 2) / 12)) {
                 $scope.behind++;
             }
 
@@ -218,8 +246,6 @@ app.controller('MainCtrl', function ($scope) {
         }, 0);
 
         $scope.totalRemittancePercent = $scope.totalRemittance / 2264213;
-
-
     }
 
 
