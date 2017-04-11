@@ -2,7 +2,8 @@
 
 // Declare app level module which depends on views, and components
 var app = angular.module('myApp', [
-  'ngRoute'
+    'ngRoute',
+    'tableSort'
 ]);
 
 app.config(['$locationProvider', '$routeProvider', function ($locationProvider, $routeProvider) {
@@ -10,11 +11,11 @@ app.config(['$locationProvider', '$routeProvider', function ($locationProvider, 
 
     $routeProvider
         .when('/', {
-        templateUrl: 'views/main.html',
-        controller: 'MainCtrl'
-    })
+            templateUrl: 'views/main.html',
+            controller: 'MainCtrl'
+        })
         .otherwise({
-        redirectTo: '/'
-    }); 
+            redirectTo: '/'
+        });
 
 }]);
