@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-md-12">
-        <h1 class="page-header">Dashboard</h1>
+        <h1 class="page-header">North American BBT Remittance Dashboard</h1>
         <div class="row placeholders">
             <div class="col-md-2">Total Remittance: ${{totalRemittance| number:0}}</div>
             <div class="col-md-2">Remitannce Goal: {{totalRemittancePercent * 100|number:0}}%</div>
@@ -18,7 +18,7 @@
                 </div>
                 <div class="form-group">
                     <label>Order By:</label>
-                    <select class="form-control" data-ng-model="selectedOrder" ng-change="orderUpdate()">
+                    <select class="form-control" data-ng-model="selectedOrder">
                         <option value="Temple">Temple</option>
                         <option value="Goal2017">2017 Goal</option>
                         <option value="Total">Remittance YTD</option>
@@ -47,7 +47,8 @@
         <hr>
         <div class="row">
             <div class="col-md-12">
-                <table class="table table-striped">
+                <table class="table table-striped" id="statsTable">
+                    <thead>
                     <tr>
                         <th>Temple</th>
                         <th>2017 Yearly Goal</th>
@@ -58,6 +59,8 @@
                         <th>{{currMonth.label}} 2017 Goal %</th>
                         <th>Month over Month %</th>
                     </tr>
+                    </thead>
+                    <tbody>
                     <tr ng-repeat="obj in objs | orderBy:selectedOrder:isReversed">
                         <td>{{obj.Temple}}</td>
                         <td>${{obj["Goal2017"] | number: 0}}</td>
@@ -80,7 +83,7 @@
                         </td>
                         <td>{{obj[monthMOM]}} </td>
                     </tr>
-
+                    </tbody>
                 </table>
 
                 <!--

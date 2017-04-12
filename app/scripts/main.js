@@ -105,7 +105,7 @@ app.controller('MainCtrl', function ($scope) {
 
             if ($scope.objs[j][$scope.monthPerc] > 0.95) {
                 $scope.currMonthMetGoal++;
-            } else if ($scope.objs[j][$scope.monthPerc] < 20 && $scope.objs[j][$scope.monthPerc] != 0) {
+            } else if ($scope.objs[j][$scope.monthPerc] < 0.20 && $scope.objs[j][$scope.monthPerc] != 0) {
                 $scope.currMonthLessThan20++;
             }
         }
@@ -130,9 +130,6 @@ app.controller('MainCtrl', function ($scope) {
     $scope.selectedOrder = "Total";
     $scope.isReversed = true;
 
-    $scope.orderUpdate = function () {
-        //console.log("selectedOrder:" + $scope.selectedOrder);
-    }
 
     function calculateStats(arr) {
         $scope.zeroRemittance = 0;
@@ -143,21 +140,17 @@ app.controller('MainCtrl', function ($scope) {
         for (var i = 0; i < arr.length; i++) {
             //console.log(arr[i]);
             arr[i]["Goal2017"] = Number(arr[i]["Goal2017"]);
-            arr[i]["2016"] = Number(arr[i]["2016"])
-            arr[i]["Monthly2017"] = Number(arr[i]["Monthly2017"])
-            arr[i]["Jan2017"] = Number(arr[i]["Jan2017"]);
-            arr[i]["Feb2017"] = Number(arr[i]["Feb2017"]);
-            arr[i]["Mar2017"] = Number(arr[i]["Mar2017"]);
-            arr[i]["Apr2017"] = Number(arr[i]["Apr2017"]);
-            arr[i]["May2017"] = Number(arr[i]["May2017"]);
-            arr[i]["Jun2017"] = Number(arr[i]["Jun2017"]);
-            arr[i]["Jul2017"] = Number(arr[i]["Jul2017"]);
-            arr[i]["Aug2017"] = Number(arr[i]["Aug2017"]);
-            arr[i]["Sep2017"] = Number(arr[i]["Sep2017"]);
-            arr[i]["Oct2017"] = Number(arr[i]["Oct2017"]);
-            arr[i]["Nov2017"] = Number(arr[i]["Nov2017"]);
-            arr[i]["Dec2017"] = Number(arr[i]["Dec2017"]);
+            arr[i]["2016"] = Number(arr[i]["2016"]);
+            arr[i]["Monthly2017"] = Number(arr[i]["Monthly2017"]);
             arr[i]["Total"] = Number(arr[i]["Total"]);
+            
+            for(var k = 0; k < $scope.months.length; k++){
+                var _month = $scope.months[k].id;
+                var _monthYear = _month + "2017";
+                var _monthPerc = _month + "Perc";
+                arr[i][_monthYear] = Number(arr[i][_monthYear]);
+                arr[i][_monthPerc] = Number(arr[i][_monthPerc]);
+            }
 
             if (arr[i]["Total"] == 0) {
                 $scope.zeroRemittance++;
