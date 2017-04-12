@@ -10,6 +10,57 @@
             <div class="col-md-2"># of temples with $0 remittance: {{zeroRemittance}}</div>
         </div>
         <hr>
+        
+        <h2 class="sub-header">{{currMonth.label}} 2017</h2>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <select class="form-control" id="current-month" ng-model="currMonth" ng-options="c as c.label for c in months track by c.id" ng-change=updateMonth()></select>
+                </div>
+            </div>
+            
+        <div class="col-md-8">
+            Total Remittance for {{currMonth.label}}: ${{currMonthRemittance}}
+            <br> Number of Temples who submitted: {{currMonthSubmitted}}
+            <br> Number of temples who did not: {{currMonthNotSubmitted}}
+            <br> Number of temples who hit or exceeded monthly goal: {{currMonthMetGoal}}
+            <br> Number of temples who submitted but had % less than 20%: {{currMonthLessThan20}}
+        </div>
+
+        </div>
+        <table ng-table="demoTable" class="table table-striped">
+            <tr ng-repeat="obj in $data">
+                <td title="'Temple'" sortable="'Temple'">{{obj.Temple}}</td>
+                <td title="'2017 Goal'" sortable="'Goal2017'">${{obj["Goal2017"] | number: 0}}</td>
+                <td title="'Remittance'" sortable="'Total'">${{obj.Total | number: 0}}</td>
+                <td title="'YTD Goal %'" sortable="'PercYear'">
+                    <div class="progress">
+                        <div class="progress-bar" ng-class="getProgressBarClass(obj.PercYear)" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em; width:{{obj.PercYear*100|number:0}}%;">
+                            {{obj.PercYear*100 | number:0}}%
+                        </div>
+                    </div>
+                </td>
+                <td title="'2017 Monthly Goal'" sortable="'Monthly2017'">${{obj["Monthly2017"] | number: 0}}</td>
+                <td title="currMonth['label'] +' 2017 Remittance'" sortable="monthYear">${{obj[monthYear] | number: 0}}</td>
+                <td title="currMonth['label'] + ' 2017 Goal %'" sortable="monthPerc">
+                    <div class="progress">
+                        <div class="progress-bar" ng-class="getProgressBarClass(obj[monthPerc])" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em; width:{{obj[monthPerc] > 1 ? 100 :obj[monthPerc]*100|number:0}}%;">
+                            {{obj[monthPerc] *100 | number:0}}%
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+
+
+
+
+
+
+
+        <!--
+        <hr>
         <h2 class="sub-header">{{currMonth.label}} 2017</h2>
         <div class="row">
             <div class="col-md-4">
@@ -30,9 +81,10 @@
                     </select>
                 </div>
                 <div class="checkbox">
-                    <label><input type="checkbox" data-ng-model="isReversed" /> Reverse
+                    <label>
+                        <input type="checkbox" data-ng-model="isReversed" /> Reverse
                     </label>
-                    
+
                 </div>
 
             </div>
@@ -49,49 +101,50 @@
             <div class="col-md-12">
                 <table class="table table-striped" id="statsTable">
                     <thead>
-                    <tr>
-                        <th>Temple</th>
-                        <th>2017 Yearly Goal</th>
-                        <th>Remittance YTD</th>
-                        <th>YTD Goal %</th>
-                        <th>2017 Monthly Goal</th>
-                        <th>{{currMonth.label}} 2017 Remittance</th>
-                        <th>{{currMonth.label}} 2017 Goal %</th>
-                        <th>Month over Month %</th>
-                    </tr>
+                        <tr>
+                            <th>Temple</th>
+                            <th>2017 Yearly Goal</th>
+                            <th>Remittance YTD</th>
+                            <th>YTD Goal %</th>
+                            <th>2017 Monthly Goal</th>
+                            <th>{{currMonth.label}} 2017 Remittance</th>
+                            <th>{{currMonth.label}} 2017 Goal %</th>
+                            <th>Month over Month %</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    <tr ng-repeat="obj in objs | orderBy:selectedOrder:isReversed">
-                        <td>{{obj.Temple}}</td>
-                        <td>${{obj["Goal2017"] | number: 0}}</td>
-                        <td>${{obj.Total | number: 0}}</td>
-                        <td>
-                            <div class="progress">
-                                <div class="progress-bar" ng-class="getProgressBarClass(obj.PercYear)" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em; width:{{obj.PercYear*100|number:0}}%;">
-                                    {{obj.PercYear*100 | number:0}}%
+                        <tr ng-repeat="obj in objs | orderBy:selectedOrder:isReversed">
+                            <td>{{obj.Temple}}</td>
+                            <td>${{obj["Goal2017"] | number: 0}}</td>
+                            <td>${{obj.Total | number: 0}}</td>
+                            <td>
+                                <div class="progress">
+                                    <div class="progress-bar" ng-class="getProgressBarClass(obj.PercYear)" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em; width:{{obj.PercYear*100|number:0}}%;">
+                                        {{obj.PercYear*100 | number:0}}%
+                                    </div>
                                 </div>
-                            </div>
-                        </td>
-                        <td>${{obj["Monthly2017"] | number: 0}}</td>
-                        <td>${{obj[monthYear] | number: 0}}</td>
-                        <td>
-                            <div class="progress">
-                                <div class="progress-bar" ng-class="getProgressBarClass(obj[monthPerc])" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em; width:{{obj[monthPerc] > 1 ? 100 :obj[monthPerc]*100|number:0}}%;">
-                                    {{obj[monthPerc] *100 | number:0}}%
+                            </td>
+                            <td>${{obj["Monthly2017"] | number: 0}}</td>
+                            <td>${{obj[monthYear] | number: 0}}</td>
+                            <td>
+                                <div class="progress">
+                                    <div class="progress-bar" ng-class="getProgressBarClass(obj[monthPerc])" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em; width:{{obj[monthPerc] > 1 ? 100 :obj[monthPerc]*100|number:0}}%;">
+                                        {{obj[monthPerc] *100 | number:0}}%
+                                    </div>
                                 </div>
-                            </div>
-                        </td>
-                        <td>{{obj[monthMOM]}} </td>
-                    </tr>
+                            </td>
+                            <td>{{obj[monthMOM]}} </td>
+                        </tr>
                     </tbody>
                 </table>
+-->
 
-                <!--
+        <!--
                 <table id="contents" style="width:100%; height:400px;" border>
                 </table>
 -->
-            </div>
-        </div>
-
     </div>
+</div>
+
+</div>
 </div>

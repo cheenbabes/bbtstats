@@ -1,4 +1,4 @@
-app.controller('MainCtrl', function ($scope) {
+app.controller('MainCtrl', function ($scope, NgTableParams) {
 
     var d = new Date();
     var n = d.getMonth();
@@ -72,13 +72,28 @@ app.controller('MainCtrl', function ($scope) {
     $scope.monthPerc = $scope.currMonth.id + 'Perc';
     $scope.monthMOM = $scope.currMonth.id + 'MOM';
 
+    $scope.selectedOrder = "Total";
+    $scope.isReversed = true;
+
+
+    $scope.demoTable = new NgTableParams({
+        sorting: {
+            Total: "desc"
+        },
+        count: 20
+    });
+
 
     //get the CSV
-    $.get("scripts/bbt.csv", function(data){
+    $.get("scripts/bbt.csv", function (data) {
         $scope.objs = $.csv.toObjects(data);
         calculateStats($scope.objs);
         $scope.$apply();
-    })
+        $scope.demoTable.settings({
+            dataset: $scope.objs
+        });
+    });
+
 
     $scope.updateMonth = function () {
         $scope.monthYear = $scope.currMonth.id + '2017';
@@ -93,7 +108,7 @@ app.controller('MainCtrl', function ($scope) {
         $scope.currMonthNotSubmitted = 0;
         $scope.currMonthMetGoal = 0;
         $scope.currMonthLessThan20 = 0;
-        
+
         console.log("calling updateMonth with" + $scope.currMonth.id);
         for (var j = 0; j < $scope.objs.length; j++) {
             //console.log($scope.objs[j]);
@@ -127,8 +142,7 @@ app.controller('MainCtrl', function ($scope) {
         }
     }
 
-    $scope.selectedOrder = "Total";
-    $scope.isReversed = true;
+
 
 
     function calculateStats(arr) {
@@ -143,8 +157,8 @@ app.controller('MainCtrl', function ($scope) {
             arr[i]["2016"] = Number(arr[i]["2016"]);
             arr[i]["Monthly2017"] = Number(arr[i]["Monthly2017"]);
             arr[i]["Total"] = Number(arr[i]["Total"]);
-            
-            for(var k = 0; k < $scope.months.length; k++){
+
+            for (var k = 0; k < $scope.months.length; k++) {
                 var _month = $scope.months[k].id;
                 var _monthYear = _month + "2017";
                 var _monthPerc = _month + "Perc";
