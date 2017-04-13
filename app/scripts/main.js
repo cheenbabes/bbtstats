@@ -94,6 +94,7 @@ app.controller('MainCtrl', function ($scope, NgTableParams) {
         });
     });
 
+    $scope.currMonthRemittance = 0;
 
     $scope.updateMonth = function () {
         $scope.monthYear = $scope.currMonth.id + '2017';
@@ -128,6 +129,7 @@ app.controller('MainCtrl', function ($scope, NgTableParams) {
         $scope.currMonthRemittance = $scope.objs.reduce(function (i, score) {
             return i + Number(score[$scope.monthYear]);
         }, 0)
+        console.log($scope.currMonthRemittance);
     }
 
     $scope.getProgressBarClass = function (perc) {
@@ -187,6 +189,16 @@ app.controller('MainCtrl', function ($scope, NgTableParams) {
         }, 0);
 
         $scope.totalRemittancePercent = $scope.totalRemittance / 2264213;
+
+        if ($scope.totalRemittancePercent > 0.50 && $scope.totalRemittance <= 0.75) {
+            $scope.trp_class = "statcard-default";
+        } else if ($scope.totalRemittancePercent > 0.75 && $scope.totalRemittancePercent <= .90) {
+            $scope.trp_class = "statcard-info";
+        } else if ($scope.totalRemittancePercent > 0.90) {
+            $scope.trp_class = "statcard-success";
+        } else {
+            $scope.trp_class = "statcard-warning";
+        }
     }
 
 

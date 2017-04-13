@@ -2,32 +2,109 @@
     <div class="col-md-12">
         <h1 class="page-header">North American BBT Remittance Dashboard</h1>
         <div class="row placeholders">
-            <div class="col-md-2">Total Remittance: ${{totalRemittance| number:0}}</div>
-            <div class="col-md-2">Remitannce Goal: {{totalRemittancePercent * 100|number:0}}%</div>
-            <div class="col-md-2"># of temples that have met their goal: {{metGoal}}</div>
-            <div class="col-md-2"># of temples that are on track: {{onTrack}}</div>
-            <div class="col-md-2"># of temples that are behind: {{behind}}</div>
-            <div class="col-md-2"># of temples with $0 remittance: {{zeroRemittance}}</div>
+            <div class="col-md-2">
+                <div class="statcard statcard-success">
+                    <div class="p-a">
+                        <h2 class="statcard-number">${{totalRemittance| number:0}}</h2>
+                        <span class="statcard-desc">Total Remittance</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="statcard" ng-class=trp_class>
+                    <div class="p-a">
+                        <h2 class="statcard-number">{{totalRemittancePercent * 100|number:0}}%</h2>
+                        <span class="statcard-desc">of Remittance Goal</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="statcard statcard-success">
+                    <div class="p-a">
+                        <h2 class="statcard-number">{{metGoal}}</h2>
+                        <span class="statcard-desc">{{metGoal == 1 ? 'Temple': 'Temples'}} Met their goal</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="statcard statcard-success">
+                    <div class="p-a">
+                        <h2 class="statcard-number">{{onTrack}}</h2>
+                        <span class="statcard-desc">{{onTrack == 1 ? 'Temple': 'Temples'}} on track</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="statcard statcard-danger">
+                    <div class="p-a">
+                        <h2 class="statcard-number">{{behind}}</h2>
+                        <span class="statcard-desc">{{behind == 1 ? 'Temple': 'Temples'}} behind</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="statcard statcard-danger">
+                    <div class="p-a">
+                        <h2 class="statcard-number">{{zeroRemittance}}</h2>
+                        <span class="statcard-desc">{{zeroRemittance == 1 ? 'Temple': 'Temples'}} with $0</span>
+                    </div>
+                </div>
+            </div>
         </div>
         <hr>
-        
         <h2 class="sub-header">{{currMonth.label}} 2017</h2>
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-2">
                 <div class="form-group">
                     <select class="form-control" id="current-month" ng-model="currMonth" ng-options="c as c.label for c in months track by c.id" ng-change=updateMonth()></select>
                 </div>
             </div>
-            
-        <div class="col-md-8">
-            Total Remittance for {{currMonth.label}}: ${{currMonthRemittance}}
-            <br> Number of Temples who submitted: {{currMonthSubmitted}}
-            <br> Number of temples who did not: {{currMonthNotSubmitted}}
-            <br> Number of temples who hit or exceeded monthly goal: {{currMonthMetGoal}}
-            <br> Number of temples who submitted but had % less than 20%: {{currMonthLessThan20}}
-        </div>
+            <div ng-hide="currMonthRemittance == 0">
+                <div class="col-md-2">
+                    <div class="statcard statcard-success">
+                        <div class="p-a">
+                            <h2 class="statcard-number">${{currMonthRemittance | number:0}}</h2>
+                            <span class="statcard-desc">{{currMonth.id}} Remittance</span>
+                        </div>
+                    </div>
+                </div>
 
+                <div class="col-md-2">
+                    <div class="statcard statcard-success">
+                        <div class="p-a">
+                            <h2 class="statcard-number">{{currMonthSubmitted}}</h2>
+                            <span class="statcard-desc">temples Submitted</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <div class="statcard statcard-danger">
+                        <div class="p-a">
+                            <h2 class="statcard-number">{{currMonthNotSubmitted}}</h2>
+                            <span class="statcard-desc">temples did not Submit</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="statcard statcard-info">
+                        <div class="p-a">
+                            <h2 class="statcard-number">{{currMonthMetGoal}}</h2>
+                            <span class="statcard-desc">hit or exceeded</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="statcard statcard-info">
+                        <div class="p-a">
+                            <h2 class="statcard-number">{{currMonthLessThan20}}</h2>
+                            <span class="statcard-desc">20% or less of goal</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+        <hr>
         <table ng-table="demoTable" class="table table-striped">
             <tr ng-repeat="obj in $data">
                 <td title="'Temple'" sortable="'Temple'">{{obj.Temple}}</td>
